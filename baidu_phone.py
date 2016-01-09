@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, urllib, urllib2, json
 
-
 def get_apikey():
     f = open('apikey.txt','r')
     apikey = f.readline()
@@ -9,9 +8,10 @@ def get_apikey():
     return apikey
 
 def generate_url():
-    url = 'http://apis.baidu.com/apistore/mobilenumber/mobilenumber?phone='
+    url = 'http://apis.baidu.com/apistore/mobilenumber/mobilenumber?'
     phone_num = raw_input('Please input your phone number --> ')
-    url += phone_num
+    params = {'phone': phone_num}
+    url += urllib.urlencode(params)
     return url
 
 def request_baidu(url, apikey):
@@ -20,9 +20,9 @@ def request_baidu(url, apikey):
     resp = urllib2.urlopen(req)
     if resp.getcode() == 200:
         content = resp.read()
-        #content = content.encode('utf-8')
-        if(content):
-            print(json.loads(content))
+        content = json.loads(content)
+        for k,v in content['retData'].iteritems():
+            print k, v
 
 if __name__ == "__main__":
     apikey = get_apikey()
